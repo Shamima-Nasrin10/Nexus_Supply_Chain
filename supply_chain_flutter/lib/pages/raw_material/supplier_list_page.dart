@@ -105,8 +105,8 @@ class _SupplierListPageState extends State<SupplierListPage> {
                   ApiResponse response = await _service.saveSupplier(newSupplier);
                   if (response.success) {
                     NotifyUtil.success(context, response.message ?? 'Supplier saved successfully');
-                    Navigator.of(context).pop(); // Close the dialog
-                    _fetchSuppliers(); // Refresh the list to show the new supplier
+                    Navigator.of(context).pop();
+                    _fetchSuppliers();
                   } else {
                     NotifyUtil.error(context, response.message ?? 'Failed to save supplier');
                   }
@@ -131,17 +131,17 @@ class _SupplierListPageState extends State<SupplierListPage> {
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.white, // Title text color set to white
+            color: Colors.white,
           ),
         ),
         centerTitle: true,
-        backgroundColor: Colors.blue.shade900, // Dark blue background color
+        backgroundColor: Colors.blue.shade900,
         elevation: 4,
       ),
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade50, Colors.blue.shade100],
+            colors: [Colors.lightBlue.shade50, Colors.lightBlue.shade100],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
@@ -177,7 +177,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
-                    color: Colors.blueGrey.shade800,
+                    color: Colors.indigo.shade800,
                   ),
                 ),
                 subtitle: Padding(
@@ -190,9 +190,12 @@ class _SupplierListPageState extends State<SupplierListPage> {
                           children: [
                             Icon(Icons.person, size: 16, color: Colors.blueGrey),
                             SizedBox(width: 6),
-                            Text(
-                              'Contact Person: ${supplier.contactPerson}',
-                              style: TextStyle(color: Colors.blueGrey.shade600),
+                            Expanded(
+                              child: Text(
+                                'Contact Person: ${supplier.contactPerson}',
+                                style: TextStyle(color: Colors.blueGrey.shade600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -201,9 +204,12 @@ class _SupplierListPageState extends State<SupplierListPage> {
                           children: [
                             Icon(Icons.email, size: 16, color: Colors.blueGrey),
                             SizedBox(width: 6),
-                            Text(
-                              'Email: ${supplier.email}',
-                              style: TextStyle(color: Colors.blueGrey.shade600),
+                            Expanded(
+                              child: Text(
+                                'Email: ${supplier.email}',
+                                style: TextStyle(color: Colors.blueGrey.shade600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -212,9 +218,12 @@ class _SupplierListPageState extends State<SupplierListPage> {
                           children: [
                             Icon(Icons.phone, size: 16, color: Colors.blueGrey),
                             SizedBox(width: 6),
-                            Text(
-                              'Cell: ${supplier.cellNo}',
-                              style: TextStyle(color: Colors.blueGrey.shade600),
+                            Expanded(
+                              child: Text(
+                                'Cell: ${supplier.cellNo}',
+                                style: TextStyle(color: Colors.blueGrey.shade600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
@@ -223,9 +232,12 @@ class _SupplierListPageState extends State<SupplierListPage> {
                           children: [
                             Icon(Icons.location_on, size: 16, color: Colors.blueGrey),
                             SizedBox(width: 6),
-                            Text(
-                              'Address: ${supplier.address}',
-                              style: TextStyle(color: Colors.blueGrey.shade600),
+                            Expanded(
+                              child: Text(
+                                'Address: ${supplier.address}',
+                                style: TextStyle(color: Colors.blueGrey.shade600),
+                                overflow: TextOverflow.ellipsis,
+                              ),
                             ),
                           ],
                         ),
