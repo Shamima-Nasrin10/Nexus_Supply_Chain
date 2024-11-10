@@ -6,11 +6,10 @@ import '../../util/apiresponse.dart';
 class ProcurementService {
   final String apiUrl = 'http://localhost:8080/api/procurement';
 
-
   Future<ApiResponse> getAllProcurements() async {
     try {
       final response = await http.get(Uri.parse('$apiUrl/list'));
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiResponse.fromJson(json.decode(response.body));
       } else {
         return ApiResponse(success: false, message: 'Failed to load procurements');
@@ -20,13 +19,12 @@ class ProcurementService {
     }
   }
 
-
-  Future<ApiResponse> saveProcurement(Procurement procurement) async {
+  Future<ApiResponse> saveProcurements(List<Procurement> procurements) async {
     try {
       final response = await http.post(
-        Uri.parse('$apiUrl/save'),
+        Uri.parse('$apiUrl/saveAll'),
         headers: {'Content-Type': 'application/json'},
-        body: json.encode(procurement.toJson()),
+        body: json.encode(procurements.map((procurement) => procurement.toJson()).toList()),
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiResponse.fromJson(json.decode(response.body));
@@ -56,11 +54,10 @@ class ProcurementService {
     }
   }
 
-
   Future<ApiResponse> deleteProcurementById(int id) async {
     try {
       final response = await http.delete(Uri.parse('$apiUrl/delete/$id'));
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiResponse.fromJson(json.decode(response.body));
       } else {
         return ApiResponse(success: false, message: 'Failed to delete procurement');
@@ -70,11 +67,10 @@ class ProcurementService {
     }
   }
 
-
   Future<ApiResponse> getProcurementById(int id) async {
     try {
       final response = await http.get(Uri.parse('$apiUrl/$id'));
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 || response.statusCode == 201) {
         return ApiResponse.fromJson(json.decode(response.body));
       } else {
         return ApiResponse(success: false, message: 'Failed to fetch procurement');
