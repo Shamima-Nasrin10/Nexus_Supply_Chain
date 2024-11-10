@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:supply_chain_flutter/model/raw_mat_category_model.dart';
+import 'package:supply_chain_flutter/model/raw_material/raw_mat_category_model.dart';
 
 class RawMaterial {
    int? id;

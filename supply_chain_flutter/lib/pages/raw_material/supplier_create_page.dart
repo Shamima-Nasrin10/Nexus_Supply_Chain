@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:supply_chain_flutter/model/supplier_model.dart';
+import 'package:supply_chain_flutter/model/raw_material/supplier_model.dart';
 import 'package:supply_chain_flutter/service/supplier_service.dart';
 import 'package:supply_chain_flutter/util/apiresponse.dart';
 import '../../util/notify_util.dart';
