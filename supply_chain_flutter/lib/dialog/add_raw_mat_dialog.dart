@@ -158,7 +158,7 @@ class _AddRawMaterialDialogState extends State<AddRawMaterialDialog> {
             // Quantity Field
             TextField(
               controller: quantityTEC,
-              decoration: InputDecoration(labelText: 'Quantity'),
+              decoration: InputDecoration(labelText: 'Stock'),
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 10),
