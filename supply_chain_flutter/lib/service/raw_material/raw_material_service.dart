@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
-import '../model/raw_material/raw_material_model.dart';
-import '../util/apiresponse.dart';
+import '../../model/raw_material/raw_material_model.dart';
+import '../../util/apiresponse.dart';
 
 class RawMaterialService {
   final String apiUrl = 'http://localhost:8080/api/rawmaterial';

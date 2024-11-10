@@ -5,7 +5,7 @@ import 'package:supply_chain_flutter/model/raw_material/supplier_model.dart';
 
 class Procurement {
   int? id;
-  RawMaterial? rawMaterial;
+  List<RawMaterial>? rawMaterials;
   Supplier? supplier;
   DateTime? procurementDate;
   double? unitPrice;
@@ -15,7 +15,7 @@ class Procurement {
 
   Procurement({
     this.id,
-    this.rawMaterial,
+    this.rawMaterials,
     this.supplier,
     this.procurementDate,
     this.unitPrice,
@@ -27,9 +27,9 @@ class Procurement {
   factory Procurement.fromJson(Map<String, dynamic> json) {
     return Procurement(
       id: json['id'],
-      rawMaterial: json['rawMaterial'] != null
-          ? RawMaterial.fromJson(json['rawMaterial'])
-          : null,
+      rawMaterials: (json['rawMaterials'] as List?)
+          ?.map((item) => RawMaterial.fromJson(item))
+          .toList(),
       supplier: json['rawMaterialSupplier'] != null
           ? Supplier.fromJson(json['rawMaterialSupplier'])
           : null,
@@ -48,7 +48,7 @@ class Procurement {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
-      'rawMaterial': rawMaterial?.toJson(),
+      'rawMaterials': rawMaterials?.map((item) => item.toJson()).toList(),
       'rawMaterialSupplier': supplier?.toJson(),
       'procurementDate': procurementDate?.toIso8601String(),
       'unitPrice': unitPrice,

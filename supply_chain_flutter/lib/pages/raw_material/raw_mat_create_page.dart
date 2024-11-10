@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
 import 'package:supply_chain_flutter/model/raw_material/raw_mat_category_model.dart';
-import 'package:supply_chain_flutter/service/raw_mat_category_service.dart';
+import 'package:supply_chain_flutter/service/raw_material/raw_mat_category_service.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
 
 import '../../model/raw_material/raw_material_model.dart';
