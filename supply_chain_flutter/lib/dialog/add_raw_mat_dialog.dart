@@ -39,8 +39,7 @@ class _AddRawMaterialDialogState extends State<AddRawMaterialDialog> {
   }
 
   Future<void> _loadCategories() async {
-    final response =
-    await RawMaterialCategoryService().getAllRawMaterialCategories();
+    final response = await RawMaterialCategoryService().getAllRawMaterialCategories();
     if (response.success) {
       setState(() {
         _categories = (response.data?['categories'] as List)
@@ -48,8 +47,7 @@ class _AddRawMaterialDialogState extends State<AddRawMaterialDialog> {
             .toList();
       });
     } else {
-      NotifyUtil.error(
-          context, response.message ?? 'Failed to load categories');
+      NotifyUtil.error(context, response.message ?? 'Failed to load categories');
     }
   }
 
@@ -64,8 +62,7 @@ class _AddRawMaterialDialogState extends State<AddRawMaterialDialog> {
       }
     } else {
       // For Mobile: Use image_picker to pick image
-      final XFile? pickedImage =
-      await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         setState(() {
           selectedImage = pickedImage;
@@ -80,14 +77,18 @@ class _AddRawMaterialDialogState extends State<AddRawMaterialDialog> {
       return;
     }
     _rawMaterial.name = nameTEC.text;
+    _rawMaterial.quantity = int.tryParse(quantityTEC.text) ?? 0;
+
+    // Ensure that category and unit are selected before submitting
     if (_rawMaterial.unit == null) {
       NotifyUtil.error(context, 'Please select unit.');
       return;
     }
-    if (_rawMaterial.category == null) {
-      NotifyUtil.error(context, 'Please select a category before saving.');
+    if (selectedCategory == null) {
+      NotifyUtil.error(context, 'Please select a category.');
       return;
     }
+    _rawMaterial.category = selectedCategory; // Assign selected category to raw material
 
     var uri = Uri.parse('http://localhost:8080/api/rawmaterial/save');
     var request = http.MultipartRequest('POST', uri);
@@ -117,15 +118,15 @@ class _AddRawMaterialDialogState extends State<AddRawMaterialDialog> {
     await _sendRequest(request);
   }
 
-
   Future<void> _sendRequest(http.MultipartRequest request) async {
     try {
       var response = await request.send();
       if (response.statusCode == 200) {
         NotifyUtil.success(context, 'Raw Material saved successfully');
+        widget.onSave(); // Callback to refresh the main page after saving
+        Navigator.of(context).pop(); // Close the dialog
       } else {
-        NotifyUtil.error(
-            context, 'Failed to save. Status code: ${response.statusCode}');
+        NotifyUtil.error(context, 'Failed to save. Status code: ${response.statusCode}');
       }
     } catch (e) {
       NotifyUtil.error(context, 'Error occurred while submitting: $e');
@@ -171,8 +172,6 @@ class _AddRawMaterialDialogState extends State<AddRawMaterialDialog> {
                 });
               },
               decoration: InputDecoration(labelText: 'Unit'),
-              validator: (value) =>
-              value == null ? 'Please select a unit' : null,
             ),
             SizedBox(height: 10),
             // Category Dropdown
@@ -187,6 +186,7 @@ class _AddRawMaterialDialogState extends State<AddRawMaterialDialog> {
               onChanged: (RawMatCategory? newCategory) {
                 setState(() {
                   selectedCategory = newCategory;
+                  _rawMaterial.category = newCategory; // Update raw material's category
                 });
               },
               decoration: InputDecoration(labelText: 'Category'),

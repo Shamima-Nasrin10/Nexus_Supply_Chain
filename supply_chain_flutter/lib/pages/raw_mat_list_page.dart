@@ -23,11 +23,18 @@ class _RawMatListPageState extends State<RawMatListPage> {
 
   Future<void> loadRawMaterials() async {
     final response = await RawMaterialService().getRawMaterials();
+
+    // Error handling and debug logging
     if (response.success) {
       setState(() {
-        rawMaterials = (response.data?['rawMaterials'] as List)
-            .map((json) => RawMaterial.fromJson(json))
-            .toList();
+        // Verify the correct structure of response data
+        if (response.data != null && response.data!['rawMaterials'] != null) {
+          rawMaterials = (response.data!['rawMaterials'] as List)
+              .map((json) => RawMaterial.fromJson(json))
+              .toList();
+        } else {
+          NotifyUtil.error(context, 'Data format is incorrect');
+        }
       });
     } else {
       NotifyUtil.error(context, response.message ?? 'Failed to load raw materials');
@@ -93,16 +100,19 @@ class _RawMatListPageState extends State<RawMatListPage> {
               cells: [
                 DataCell(Text('${index + 1}')),
                 DataCell(Text(rawMaterial.name ?? '-')),
-                DataCell(Text(rawMaterial.unit?.toString() ?? '-')),
+                DataCell(Text(rawMaterial.unit?.toString().split('.').last ?? '-')),
                 DataCell(Text(rawMaterial.category?.name ?? '-')),
                 DataCell(Text('${rawMaterial.quantity ?? 0}')),
                 DataCell(rawMaterial.image != null
-                    ? Image.network(
-                  'http://localhost:8080/images/rawmaterial/${rawMaterial.image}',
-                  height: 50,
-                  width: 50,
-                  fit: BoxFit.cover,
-                )
+                    ? Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Image.network(
+                                        'http://localhost:8080/images/rawmaterial/${rawMaterial.image}',
+                                        height: 50,
+                                        width: 50,
+                                        fit: BoxFit.cover,
+                                      ),
+                    )
                     : Text('No Image')),
                 DataCell(
                   Row(
