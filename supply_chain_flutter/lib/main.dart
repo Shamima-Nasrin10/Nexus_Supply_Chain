@@ -5,6 +5,7 @@ import 'package:supply_chain_flutter/pages/raw_material/raw_mat_category_list.da
 import 'package:supply_chain_flutter/pages/raw_material/raw_mat_list_page.dart';
 import 'package:supply_chain_flutter/pages/raw_material/raw_mat_create_page.dart';
 import 'package:supply_chain_flutter/pages/raw_material/supplier_create_page.dart';
+import 'package:supply_chain_flutter/pages/raw_material/supplier_list_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: SupplierCreatePage()
+        home: SupplierListPage()
     );
   }
 
