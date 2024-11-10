@@ -3,7 +3,7 @@ import 'package:supply_chain_flutter/model/raw_material.dart';
 import 'package:supply_chain_flutter/service/raw_material_service.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
 
-import '../dialog/add_raw_mat_dialog.dart';
+import '../../dialog/add_raw_mat_dialog.dart';
 
 class RawMatListPage extends StatefulWidget {
   const RawMatListPage({Key? key}) : super(key: key);

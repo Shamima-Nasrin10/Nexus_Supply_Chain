@@ -11,7 +11,7 @@ import 'package:supply_chain_flutter/model/raw_mat_category_model.dart';
 import 'package:supply_chain_flutter/service/raw_mat_category_service.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
 
-import '../model/raw_material.dart';
+import '../../model/raw_material.dart';
 
 class RawMatCreatePage extends StatefulWidget {
   const RawMatCreatePage({Key? key}) : super(key: key);
