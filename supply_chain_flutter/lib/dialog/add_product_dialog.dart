@@ -7,29 +7,26 @@ import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:image_picker_web/image_picker_web.dart';
-import 'package:supply_chain_flutter/model/production/product_model.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
 
+import '../model/production/product_model.dart';
 
-class ProductCreatePage extends StatefulWidget {
-  const ProductCreatePage({Key? key}) : super(key: key);
+class AddProductDialog extends StatefulWidget {
+  final VoidCallback onSave;
+
+  AddProductDialog({required this.onSave});
 
   @override
-  _ProductCreatePageState createState() => _ProductCreatePageState();
+  _AddProductDialogState createState() => _AddProductDialogState();
 }
 
-class _ProductCreatePageState extends State<ProductCreatePage> {
+class _AddProductDialogState extends State<AddProductDialog> {
   final TextEditingController nameTEC = TextEditingController();
   final TextEditingController descriptionTEC = TextEditingController();
   XFile? selectedImage;
-  Uint8List? webImage;
+  Uint8List? webImage; // For storing the image bytes on web
   Product _product = Product(name: '', description: '');
   final ImagePicker _picker = ImagePicker();
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   Future<void> pickImage() async {
     if (kIsWeb) {
@@ -42,8 +39,7 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
       }
     } else {
       // For Mobile: Use image_picker to pick image
-      final XFile? pickedImage =
-      await _picker.pickImage(source: ImageSource.gallery);
+      final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         setState(() {
           selectedImage = pickedImage;
@@ -93,69 +89,48 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
     await _sendRequest(request);
   }
 
-
   Future<void> _sendRequest(http.MultipartRequest request) async {
     try {
       var response = await request.send();
       if (response.statusCode == 200) {
         NotifyUtil.success(context, 'Product saved successfully');
+        widget.onSave(); // Callback to refresh the main page after saving
+        Navigator.of(context).pop(); // Close the dialog
       } else {
-        NotifyUtil.error(
-            context, 'Failed to save. Status code: ${response.statusCode}');
+        NotifyUtil.error(context, 'Failed to save. Status code: ${response.statusCode}');
       }
     } catch (e) {
       NotifyUtil.error(context, 'Error occurred while submitting: $e');
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Add Product"),
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(30),
+    return AlertDialog(
+      title: Text('Add New Product'),
+      content: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Center(
-              child: Text(
-                "Product",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            const SizedBox(height: 10),
-            // Name Text Field
+            // Name Field
             TextField(
               controller: nameTEC,
-              decoration: const InputDecoration(
-                labelText: "Name",
-                border: OutlineInputBorder(),
-                icon: Icon(Icons.label),
-              ),
+              decoration: InputDecoration(labelText: 'Name'),
             ),
             const SizedBox(height: 10),
-            // Description Text Field
+            // Description Field
             TextField(
               controller: descriptionTEC,
+              decoration: InputDecoration(labelText: 'Description'),
               maxLines: 3,
-              decoration: const InputDecoration(
-                labelText: "Description",
-                border: OutlineInputBorder(),
-                icon: Icon(Icons.description),
-              ),
             ),
             const SizedBox(height: 10),
             // Image Picker Button
             ElevatedButton.icon(
-              icon: const Icon(Icons.image),
-              label: const Text('Pick Image'),
+              icon: Icon(Icons.image),
+              label: Text('Pick Image'),
               onPressed: pickImage,
             ),
-            // Display selected image preview
             if (kIsWeb && webImage != null)
               Padding(
                 padding: const EdgeInsets.all(8.0),
@@ -166,32 +141,29 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
                   fit: BoxFit.cover,
                 ),
               )
-            else
-              if (!kIsWeb && selectedImage != null)
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Image.file(
-                    File(selectedImage!.path),
-                    height: 100,
-                    width: 100,
-                    fit: BoxFit.cover,
-                  ),
+            else if (!kIsWeb && selectedImage != null)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Image.file(
+                  File(selectedImage!.path),
+                  height: 100,
+                  width: 100,
+                  fit: BoxFit.cover,
                 ),
-            const SizedBox(height: 20),
-            // Save Product Button
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.blue,
               ),
-              onPressed: submitProduct,
-              child: const Text(
-                "Save Product",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
           ],
         ),
       ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text('Cancel'),
+        ),
+        ElevatedButton(
+          onPressed: submitProduct,
+          child: Text('Save'),
+        ),
+      ],
     );
   }
 }
