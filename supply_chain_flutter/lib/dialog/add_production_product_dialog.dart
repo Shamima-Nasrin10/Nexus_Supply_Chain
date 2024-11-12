@@ -21,6 +21,9 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
   final TextEditingController quantityTEC = TextEditingController(text: '0');
   List<Product> products = [];
   List<RawMaterial> rawMaterials = [];
+  List<Map<String, dynamic>> rawMatUsages = [];
+
+  Product? selectedProduct;
 
   @override
   void initState() {
@@ -42,7 +45,6 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
     }
   }
 
-
   Future<void> _loadRawMaterials() async {
     final response = await RawMaterialService().getRawMaterials();
     if (response.success) {
@@ -54,6 +56,21 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
     } else {
       NotifyUtil.error(context, response.message ?? 'Failed to load raw materials');
     }
+  }
+
+  void _addRawMatUsage() {
+    setState(() {
+      rawMatUsages.add({
+        'rawMaterial': null,
+        'quantity': 0,
+      });
+    });
+  }
+
+  void _removeRawMatUsage(int index) {
+    setState(() {
+      rawMatUsages.removeAt(index);
+    });
   }
 
   @override
@@ -77,32 +94,75 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
             const SizedBox(height: 10),
             DropdownButtonFormField<Product>(
               hint: Text('Select Product'),
+              value: selectedProduct,
               items: products.map((product) {
                 return DropdownMenuItem(
                   value: product,
                   child: Text(product.name),
                 );
               }).toList(),
-              onChanged: (Product? selectedProduct) {
+              onChanged: (Product? selected) {
                 setState(() {
-                  // Assign the selected product as needed
+                  selectedProduct = selected;
                 });
               },
             ),
             const SizedBox(height: 10),
-            DropdownButtonFormField<RawMaterial>(
-              hint: Text('Select Raw Material'),
-              items: rawMaterials.map((rawMaterial) {
-                return DropdownMenuItem(
-                  value: rawMaterial,
-                  child: Text(rawMaterial.name),
-                );
-              }).toList(),
-              onChanged: (RawMaterial? selectedRawMaterial) {
-                setState(() {
-                  // Assign the selected raw material as needed
-                });
-              },
+            Column(
+              children: [
+                ...rawMatUsages.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  Map<String, dynamic> usage = entry.value;
+
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<RawMaterial>(
+                          hint: Text('Select Raw Material'),
+                          value: usage['rawMaterial'],
+                          items: rawMaterials.map((rawMaterial) {
+                            return DropdownMenuItem(
+                              value: rawMaterial,
+                              child: Text(rawMaterial.name),
+                            );
+                          }).toList(),
+                          onChanged: (RawMaterial? selected) {
+                            setState(() {
+                              usage['rawMaterial'] = selected;
+                            });
+                          },
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: TextField(
+                          decoration: InputDecoration(labelText: 'Quantity'),
+                          keyboardType: TextInputType.number,
+                          onChanged: (value) {
+                            setState(() {
+                              usage['quantity'] = int.tryParse(value) ?? 0;
+                            });
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.remove_circle_outline),
+                        onPressed: () => _removeRawMatUsage(index),
+                      ),
+                    ],
+                  );
+                }),
+                const SizedBox(height: 10),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton.icon(
+                    onPressed: _addRawMatUsage,
+                    icon: Icon(Icons.add),
+                    label: Text('Add Raw Material Usage'),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
@@ -114,7 +174,9 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
         ),
         ElevatedButton(
           onPressed: () {
-            // Save action
+            // Save action - add your saving logic here
+            Navigator.of(context).pop();
+            widget.onSave();
           },
           child: Text('Save'),
         ),
