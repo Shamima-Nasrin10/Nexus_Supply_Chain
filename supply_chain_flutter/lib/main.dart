@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supply_chain_flutter/pages/homepage.dart';
 import 'package:supply_chain_flutter/pages/production/product_create_page.dart';
 import 'package:supply_chain_flutter/pages/production/product_list_page.dart';
+import 'package:supply_chain_flutter/pages/production/warehouse_list_page.dart';
 import 'package:supply_chain_flutter/pages/raw_material/procurement_create_page.dart';
 import 'package:supply_chain_flutter/pages/raw_material/raw_mat_category_create.dart';
 import 'package:supply_chain_flutter/pages/raw_material/raw_mat_category_list.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: ProductListPage()
+        home: WarehouseListPage()
     );
   }
 
