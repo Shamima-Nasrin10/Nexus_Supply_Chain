@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:supply_chain_flutter/model/production/production_product_model.dart';
 import 'package:supply_chain_flutter/model/production/warehouse_model.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
+import 'package:intl/intl.dart';
 
 import '../../dialog/warehouse_select_dialog.dart';
 import '../../dialog/add_production_product_dialog.dart';
@@ -67,7 +68,7 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
         Uri.parse('http://localhost:8080/api/productionProduct/status/$id')
             .replace(queryParameters: {
           'status': newStatus.toString().split('.').last,
-          if (warehouseId != null) 'warehouseId': warehouseId.toString(), // Only include if warehouseId is not null
+          if (warehouseId != null) 'warehouseId': warehouseId.toString(),
         }),
         headers: {'Content-Type': 'application/json'},
       );
@@ -84,16 +85,26 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
     }
   }
 
+  String formatDate(DateTime? dateTime) {
+    if (dateTime == null) return '-';
+    return DateFormat('yyyy-MM-dd').format(dateTime); // Date only
+  }
+
+  String formatTime(DateTime? dateTime) {
+    if (dateTime == null) return '-';
+    return DateFormat('HH:mm').format(dateTime); // Time only (hour and minute)
+  }
+
   Future<void> openAddProductionProductDialog() async {
     final result = await showDialog(
       context: context,
       builder: (context) => AddProductionProductDialog(
-        onSave: loadProdProducts, // Reload the list after saving
+        onSave: loadProdProducts,
       ),
     );
 
     if (result == true) {
-      loadProdProducts(); // Reload the list if a product was added successfully
+      loadProdProducts();
     }
   }
 
@@ -101,15 +112,22 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Production Products List'),
+        title: Text('Production Products'),
+        backgroundColor: Colors.blueAccent,
+        centerTitle: true,
+        elevation: 10,
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
             Text(
-              'Production Products List',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              'Production Products',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.bold,
+                color: Colors.blueGrey,
+              ),
             ),
             const SizedBox(height: 20),
             Expanded(
@@ -118,39 +136,102 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
                 itemBuilder: (context, index) {
                   final product = prodProducts[index];
                   return Card(
-                    margin: EdgeInsets.symmetric(vertical: 5),
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 4,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(12.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('Product Name: ${product.product?.name}',
-                                  style:
-                                      TextStyle(fontWeight: FontWeight.bold)),
-                              Text('Batch Number: ${product.batchNumber}'),
-                              Text('Quantity: ${product.quantity}'),
-                              Text(
-                                  'Status: ${product.status.toString().split('.').last}'),
-                              Text(
-                                  'Completion Date: ${product.completionDate?.toString() ?? '-'}'),
-                              Text(
-                                  'Warehouse Date: ${product.movedToWarehouseDate?.toString() ?? '-'}'),
-                            ],
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.label, color: Colors.blueAccent),
+                                    const SizedBox(width: 6),
+                                    Text(
+                                      'Product Name: ${product.product?.name}',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blueAccent,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text('Batch Number: ${product.batchNumber}'),
+                                Text('Quantity: ${product.quantity}'),
+                                Text(
+                                    'Status: ${product.status.toString().split('.').last}'),
+
+                                // Date and time with different colors
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'Completion Date: ',
+                                        style: TextStyle(color: Colors.blueGrey),
+                                      ),
+                                      TextSpan(
+                                        text: formatDate(product.completionDate),
+                                        style: TextStyle(color: Colors.teal),
+                                      ),
+                                      TextSpan(
+                                        text: ' ${formatTime(product.completionDate)}',
+                                        style: TextStyle(color: Colors.orangeAccent),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'Warehouse Date: ',
+                                        style: TextStyle(color: Colors.blueGrey),
+                                      ),
+                                      TextSpan(
+                                        text: formatDate(product.movedToWarehouseDate),
+                                        style: TextStyle(color: Colors.teal),
+                                      ),
+                                      TextSpan(
+                                        text: ' ${formatTime(product.movedToWarehouseDate)}',
+                                        style: TextStyle(color: Colors.orangeAccent),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                           Column(
                             children: [
                               if (product.status != ProductionStatus.COMPLETED)
                                 ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.orangeAccent,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
                                   onPressed: () => updateStatus(
-                                      product?.id, ProductionStatus.COMPLETED),
-                                  child: Text('Mark as Completed'),
+                                      product.id, ProductionStatus.COMPLETED),
+                                  child: Text('Complete'),
                                 ),
                               if (product.status == ProductionStatus.COMPLETED)
                                 ElevatedButton(
-                                  onPressed: () => updateStatus(product?.id,
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.blue,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                  onPressed: () => updateStatus(
+                                      product.id,
                                       ProductionStatus.MOVED_TO_WAREHOUSE),
                                   child: Text('Move to Warehouse'),
                                 ),
@@ -168,6 +249,7 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: openAddProductionProductDialog,
+        backgroundColor: Colors.blueAccent,
         child: Icon(Icons.add),
         tooltip: 'Add Production Product',
       ),
