@@ -4,6 +4,8 @@ import 'package:supply_chain_flutter/util/notify_util.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 
+import '../util/apiresponse.dart';
+
 class WarehouseSelectDialog extends StatefulWidget {
   @override
   _WarehouseSelectDialogState createState() => _WarehouseSelectDialogState();
@@ -21,14 +23,15 @@ class _WarehouseSelectDialogState extends State<WarehouseSelectDialog> {
 
   Future<void> loadWarehouses() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/warehouses'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      final response = await http.get(Uri.parse('http://localhost:8080/api/warehouse/list'));
+      ApiResponse apiResponse = ApiResponse.fromJson(jsonDecode(response.body));
+      if (apiResponse.success) {
         setState(() {
-          warehouses = (data['warehouses'] as List).map((item) => Warehouse.fromJson(item)).toList();
+          List<dynamic> wareHousesJson = apiResponse.data?['warehouses'];
+          warehouses = List<Warehouse>.from(wareHousesJson.map((x) => Warehouse.fromJson(x)));
         });
       } else {
-        NotifyUtil.error(context, 'Failed to load warehouses.');
+        NotifyUtil.error(context, apiResponse.message);
       }
     } catch (error) {
       NotifyUtil.error(context, error.toString());

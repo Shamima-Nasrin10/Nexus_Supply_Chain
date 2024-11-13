@@ -7,6 +7,8 @@ import 'package:supply_chain_flutter/service/raw_material/raw_material_service.d
 import 'package:supply_chain_flutter/service/production/product_service.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
 
+import '../util/apiresponse.dart';
+
 class AddProductionProductDialog extends StatefulWidget {
   final VoidCallback onSave;
 
@@ -73,6 +75,45 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
     });
   }
 
+  Future<void> _saveProductionProduct() async {
+    if (batchNumberTEC.text.isEmpty || quantityTEC.text.isEmpty || selectedProduct == null) {
+      NotifyUtil.error(context, 'Please fill out all required fields');
+      return;
+    }
+
+    try {
+      final productionProduct = {
+        'product': selectedProduct?.id,
+        'batchNumber': int.parse(batchNumberTEC.text),
+        'quantity': int.parse(quantityTEC.text),
+        'rawMatUsages': rawMatUsages.map((usage) {
+          return {
+            'rawMaterial': usage['rawMaterial']?.id,
+            'quantity': usage['quantity'],
+          };
+        }).toList(),
+      };
+
+      final response = await http.post(
+        Uri.parse('http://localhost:8080/api/productionProduct/save'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(productionProduct),
+      );
+
+      ApiResponse apiResponse = ApiResponse.fromJson(jsonDecode(response.body));
+
+      if (apiResponse.success) {
+        NotifyUtil.success(context, apiResponse.message);
+        widget.onSave();
+        Navigator.of(context).pop();
+      } else {
+        NotifyUtil.error(context, apiResponse.message);
+      }
+    } catch (e) {
+      NotifyUtil.error(context, 'Error saving product: ${e.toString()}');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -84,6 +125,7 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
             TextField(
               controller: batchNumberTEC,
               decoration: InputDecoration(labelText: 'Batch Number'),
+              keyboardType: TextInputType.number,
             ),
             const SizedBox(height: 10),
             TextField(
@@ -119,7 +161,7 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
                     children: [
                       Expanded(
                         child: DropdownButtonFormField<RawMaterial>(
-                          hint: Text('Select Raw Material'),
+                          hint: Text('Select Material'),
                           value: usage['rawMaterial'],
                           items: rawMaterials.map((rawMaterial) {
                             return DropdownMenuItem(
@@ -134,7 +176,6 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
                           },
                         ),
                       ),
-                      const SizedBox(width: 10),
                       Expanded(
                         child: TextField(
                           decoration: InputDecoration(labelText: 'Quantity'),
@@ -153,7 +194,6 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
                     ],
                   );
                 }),
-                const SizedBox(height: 10),
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton.icon(
@@ -173,11 +213,7 @@ class _AddProductionProductDialogState extends State<AddProductionProductDialog>
           child: Text('Cancel'),
         ),
         ElevatedButton(
-          onPressed: () {
-            // Save action - add your saving logic here
-            Navigator.of(context).pop();
-            widget.onSave();
-          },
+          onPressed: _saveProductionProduct,
           child: Text('Save'),
         ),
       ],

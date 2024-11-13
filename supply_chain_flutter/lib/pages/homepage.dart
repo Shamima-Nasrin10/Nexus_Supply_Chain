@@ -1,6 +1,20 @@
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  int _selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    // Implement navigation logic if needed
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -8,6 +22,13 @@ class HomePage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        leading: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Image.asset(
+            'assets/logo.png', // Add your logo path here
+            fit: BoxFit.contain,
+          ),
+        ),
         title: ShaderMask(
           shaderCallback: (bounds) => LinearGradient(
             colors: [Colors.blueAccent, Colors.lightBlueAccent],
@@ -15,7 +36,7 @@ class HomePage extends StatelessWidget {
             end: Alignment.bottomRight,
           ).createShader(bounds),
           child: Text(
-            'Supply Chain Management',
+            'Nexus Supply Chain',
             style: TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
@@ -97,11 +118,30 @@ class HomePage extends StatelessWidget {
               label: 'Production',
               routeName: '/prodProductList',
               gradient: LinearGradient(
-                colors: [Colors.blueGrey, Colors.grey],
+                colors: [Colors.blueGrey, Colors.cyan],
               ),
             ),
           ],
         ),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.business),
+            label: 'Business',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.school),
+            label: 'School',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blueAccent,
+        onTap: _onItemTapped,
       ),
     );
   }

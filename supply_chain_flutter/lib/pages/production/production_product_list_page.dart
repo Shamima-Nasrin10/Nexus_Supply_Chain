@@ -7,6 +7,7 @@ import 'package:supply_chain_flutter/util/notify_util.dart';
 
 import '../../dialog/warehouse_select_dialog.dart';
 import '../../dialog/add_production_product_dialog.dart';
+import '../../util/apiresponse.dart';
 
 class ProductionProductListPage extends StatefulWidget {
   @override
@@ -27,16 +28,11 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
     try {
       final response = await http
           .get(Uri.parse('http://localhost:8080/api/productionProduct/list'));
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
+      ApiResponse apiResponse = ApiResponse.fromJson(jsonDecode(response.body));
+      if (apiResponse.success) {
         setState(() {
-          prodProducts = (data['productionProducts'] as List?)
-                  ?.map((item) =>
-                      item != null ? ProductionProduct.fromJson(item) : null)
-                  .where((item) => item != null)
-                  .cast<ProductionProduct>()
-                  .toList() ??
-              [];
+          List<dynamic> prodProductsJson = apiResponse.data?['productionProducts'];
+          prodProducts = List<ProductionProduct>.from(prodProductsJson.map((x) => ProductionProduct.fromJson(x)));
         });
       } else {
         NotifyUtil.error(context, 'Failed to load production products.');
@@ -46,19 +42,21 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
     }
   }
 
-  Future<void> updateStatus(int id, ProductionStatus newStatus) async {
+  Future<void> updateStatus(int? id, ProductionStatus newStatus) async {
     if (newStatus == ProductionStatus.MOVED_TO_WAREHOUSE) {
       final selectedWarehouse = await showDialog<Warehouse>(
         context: context,
         builder: (context) => WarehouseSelectDialog(),
       );
 
-      if (selectedWarehouse != null) {
+      if (selectedWarehouse != null && id != null) {
         await _updateStatusOnServer(id, newStatus,
             warehouseId: selectedWarehouse.id);
       }
-    } else {
+    } else if (id != null) {
       await _updateStatusOnServer(id, newStatus);
+    } else {
+      NotifyUtil.error(context, 'No ID');
     }
   }
 
@@ -66,18 +64,20 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
       {int? warehouseId}) async {
     try {
       final response = await http.put(
-        Uri.parse('http://localhost:8080/api/productionProduct/status/$id'),
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({
+        Uri.parse('http://localhost:8080/api/productionProduct/status/$id')
+            .replace(queryParameters: {
           'status': newStatus.toString().split('.').last,
-          'warehouseId': warehouseId,
+          if (warehouseId != null) 'warehouseId': warehouseId.toString(), // Only include if warehouseId is not null
         }),
+        headers: {'Content-Type': 'application/json'},
       );
-      if (response.statusCode == 200) {
-        NotifyUtil.success(context, 'Status updated successfully.');
+      ApiResponse apiResponse = ApiResponse.fromJson(jsonDecode(response.body));
+
+      if (apiResponse.success) {
+        NotifyUtil.success(context, apiResponse.message);
         loadProdProducts();
       } else {
-        NotifyUtil.error(context, 'Failed to update status.');
+        NotifyUtil.error(context, apiResponse.message);
       }
     } catch (error) {
       NotifyUtil.error(context, error.toString());
@@ -127,7 +127,7 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Product Name: ${product.product.name}',
+                              Text('Product Name: ${product.product?.name}',
                                   style:
                                       TextStyle(fontWeight: FontWeight.bold)),
                               Text('Batch Number: ${product.batchNumber}'),
@@ -145,12 +145,12 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
                               if (product.status != ProductionStatus.COMPLETED)
                                 ElevatedButton(
                                   onPressed: () => updateStatus(
-                                      product.id, ProductionStatus.COMPLETED),
+                                      product?.id, ProductionStatus.COMPLETED),
                                   child: Text('Mark as Completed'),
                                 ),
                               if (product.status == ProductionStatus.COMPLETED)
                                 ElevatedButton(
-                                  onPressed: () => updateStatus(product.id,
+                                  onPressed: () => updateStatus(product?.id,
                                       ProductionStatus.MOVED_TO_WAREHOUSE),
                                   child: Text('Move to Warehouse'),
                                 ),
