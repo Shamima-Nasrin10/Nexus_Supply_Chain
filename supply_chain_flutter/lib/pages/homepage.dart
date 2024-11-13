@@ -70,7 +70,7 @@ class HomePage extends StatelessWidget {
               label: 'Raw Materials List',
               routeName: '/rawMatList',
               gradient: LinearGradient(
-                colors: [Colors.greenAccent, Colors.tealAccent],
+                colors: [Colors.greenAccent, Colors.blueGrey],
               ),
             ),
             _buildDashboardCard(
