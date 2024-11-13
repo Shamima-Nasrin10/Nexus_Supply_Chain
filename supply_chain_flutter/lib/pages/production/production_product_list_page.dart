@@ -10,7 +10,8 @@ import '../../dialog/add_production_product_dialog.dart';
 
 class ProductionProductListPage extends StatefulWidget {
   @override
-  _ProductionProductListPageState createState() => _ProductionProductListPageState();
+  _ProductionProductListPageState createState() =>
+      _ProductionProductListPageState();
 }
 
 class _ProductionProductListPageState extends State<ProductionProductListPage> {
@@ -24,13 +25,18 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
 
   Future<void> loadProdProducts() async {
     try {
-      final response = await http.get(Uri.parse('http://localhost:8080/api/productionProduct/list'));
+      final response = await http
+          .get(Uri.parse('http://localhost:8080/api/productionProduct/list'));
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         setState(() {
-          prodProducts = (data['productionProducts'] as List)
-              .map((item) => ProductionProduct.fromJson(item))
-              .toList();
+          prodProducts = (data['productionProducts'] as List?)
+                  ?.map((item) =>
+                      item != null ? ProductionProduct.fromJson(item) : null)
+                  .where((item) => item != null)
+                  .cast<ProductionProduct>()
+                  .toList() ??
+              [];
         });
       } else {
         NotifyUtil.error(context, 'Failed to load production products.');
@@ -48,14 +54,16 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
       );
 
       if (selectedWarehouse != null) {
-        await _updateStatusOnServer(id, newStatus, warehouseId: selectedWarehouse.id);
+        await _updateStatusOnServer(id, newStatus,
+            warehouseId: selectedWarehouse.id);
       }
     } else {
       await _updateStatusOnServer(id, newStatus);
     }
   }
 
-  Future<void> _updateStatusOnServer(int id, ProductionStatus newStatus, {int? warehouseId}) async {
+  Future<void> _updateStatusOnServer(int id, ProductionStatus newStatus,
+      {int? warehouseId}) async {
     try {
       final response = await http.put(
         Uri.parse('http://localhost:8080/api/productionProduct/status/$id'),
@@ -119,24 +127,31 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text('Product Name: ${product.product.name}', style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text('Product Name: ${product.product.name}',
+                                  style:
+                                      TextStyle(fontWeight: FontWeight.bold)),
                               Text('Batch Number: ${product.batchNumber}'),
                               Text('Quantity: ${product.quantity}'),
-                              Text('Status: ${product.status.toString().split('.').last}'),
-                              Text('Completion Date: ${product.completionDate?.toString() ?? '-'}'),
-                              Text('Warehouse Date: ${product.movedToWarehouseDate?.toString() ?? '-'}'),
+                              Text(
+                                  'Status: ${product.status.toString().split('.').last}'),
+                              Text(
+                                  'Completion Date: ${product.completionDate?.toString() ?? '-'}'),
+                              Text(
+                                  'Warehouse Date: ${product.movedToWarehouseDate?.toString() ?? '-'}'),
                             ],
                           ),
                           Column(
                             children: [
                               if (product.status != ProductionStatus.COMPLETED)
                                 ElevatedButton(
-                                  onPressed: () => updateStatus(product.id, ProductionStatus.COMPLETED),
+                                  onPressed: () => updateStatus(
+                                      product.id, ProductionStatus.COMPLETED),
                                   child: Text('Mark as Completed'),
                                 ),
                               if (product.status == ProductionStatus.COMPLETED)
                                 ElevatedButton(
-                                  onPressed: () => updateStatus(product.id, ProductionStatus.MOVED_TO_WAREHOUSE),
+                                  onPressed: () => updateStatus(product.id,
+                                      ProductionStatus.MOVED_TO_WAREHOUSE),
                                   child: Text('Move to Warehouse'),
                                 ),
                             ],

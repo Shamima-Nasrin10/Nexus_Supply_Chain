@@ -82,6 +82,15 @@ class HomePage extends StatelessWidget {
                 colors: [Colors.orangeAccent, Colors.deepOrangeAccent],
               ),
             ),
+            _buildDashboardCard(
+              context,
+              icon: Icons.business,
+              label: 'Production',
+              routeName: '/prodProductList',
+              gradient: LinearGradient(
+                colors: [Colors.orangeAccent, Colors.deepOrangeAccent],
+              ),
+            ),
           ],
         ),
       ),
