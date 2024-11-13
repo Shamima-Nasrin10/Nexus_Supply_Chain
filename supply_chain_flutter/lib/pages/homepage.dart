@@ -61,7 +61,7 @@ class HomePage extends StatelessWidget {
               label: 'Raw Materials Category',
               routeName: '/rawMatCategoryList',
               gradient: LinearGradient(
-                colors: [Colors.purpleAccent, Colors.deepPurpleAccent],
+                colors: [Colors.blueGrey, Colors.deepPurpleAccent],
               ),
             ),
             _buildDashboardCard(
@@ -79,7 +79,7 @@ class HomePage extends StatelessWidget {
               label: 'Suppliers',
               routeName: '/supplierList',
               gradient: LinearGradient(
-                colors: [Colors.orangeAccent, Colors.deepOrangeAccent],
+                colors: [Colors.teal, Colors.blueGrey],
               ),
             ),
             _buildDashboardCard(
@@ -88,7 +88,7 @@ class HomePage extends StatelessWidget {
               label: 'Product',
               routeName: '/productList',
               gradient: LinearGradient(
-                colors: [Colors.lightBlueAccent, Colors.lightBlue],
+                colors: [Colors.blueAccent, Colors.lightBlue],
               ),
             ),
             _buildDashboardCard(
