@@ -100,7 +100,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Suppliers',
               routeName: '/supplierList',
               gradient: LinearGradient(
-                colors: [Colors.teal, Colors.blueGrey],
+                colors: [Colors.teal, Colors.indigo],
               ),
             ),
             _buildDashboardCard(
@@ -135,8 +135,8 @@ class _HomePageState extends State<HomePage> {
             label: 'Business',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'School',
+            icon: Icon(Icons.payment),
+            label: 'Transactions',
           ),
         ],
         currentIndex: _selectedIndex,
