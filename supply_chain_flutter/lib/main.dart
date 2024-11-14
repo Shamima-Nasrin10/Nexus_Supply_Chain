@@ -3,6 +3,7 @@ import 'package:supply_chain_flutter/pages/homepage.dart';
 import 'package:supply_chain_flutter/pages/loginpage.dart';
 import 'package:supply_chain_flutter/pages/production/product_list_page.dart';
 import 'package:supply_chain_flutter/pages/production/production_product_list_page.dart';
+import 'package:supply_chain_flutter/pages/production/warehouse_list_page.dart';
 import 'package:supply_chain_flutter/pages/raw_material/procurement_create_page.dart';
 import 'package:supply_chain_flutter/pages/raw_material/procurement_list_page.dart';
 import 'package:supply_chain_flutter/pages/raw_material/raw_mat_category_list.dart';
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) => HomePage(),
+        '/warehouseList': (context) => WarehouseListPage(),
         '/prodProductList': (context) => ProductionProductListPage(),
         '/productList': (context) => ProductListPage(),
         '/procurementList': (context) => ProcurementListPage(),

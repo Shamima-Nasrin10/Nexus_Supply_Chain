@@ -11,6 +11,8 @@ import '../../dialog/add_production_product_dialog.dart';
 import '../../util/apiresponse.dart';
 
 class ProductionProductListPage extends StatefulWidget {
+  final int? warehouseId;
+  ProductionProductListPage({this.warehouseId});
   @override
   _ProductionProductListPageState createState() =>
       _ProductionProductListPageState();
@@ -22,10 +24,14 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
   @override
   void initState() {
     super.initState();
-    loadProdProducts();
+    if (widget.warehouseId != null) {
+      loadProdProductsByWarehouse(widget.warehouseId!);
+    } else {
+      loadAllProdProducts();
+    }
   }
 
-  Future<void> loadProdProducts() async {
+  Future<void> loadAllProdProducts() async {
     try {
       final response = await http
           .get(Uri.parse('http://localhost:8080/api/productionProduct/list'));
@@ -33,7 +39,8 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
       if (apiResponse.success) {
         setState(() {
           List<dynamic> prodProductsJson = apiResponse.data?['productionProducts'];
-          prodProducts = List<ProductionProduct>.from(prodProductsJson.map((x) => ProductionProduct.fromJson(x)));
+          prodProducts = List<ProductionProduct>.from(
+              prodProductsJson.map((x) => ProductionProduct.fromJson(x)));
         });
       } else {
         NotifyUtil.error(context, 'Failed to load production products.');
@@ -42,6 +49,26 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
       NotifyUtil.error(context, error.toString());
     }
   }
+
+  Future<void> loadProdProductsByWarehouse(int warehouseId) async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://localhost:8080/api/productionProduct/warehouse/$warehouseId'));
+      ApiResponse apiResponse = ApiResponse.fromJson(jsonDecode(response.body));
+      if (apiResponse.success) {
+        setState(() {
+          List<dynamic> prodProductsJson = apiResponse.data?['prodProducts'];
+          prodProducts = List<ProductionProduct>.from(
+              prodProductsJson.map((x) => ProductionProduct.fromJson(x)));
+        });
+      } else {
+        NotifyUtil.error(context, 'Failed to load production products for the selected warehouse.');
+      }
+    } catch (error) {
+      NotifyUtil.error(context, error.toString());
+    }
+  }
+
 
   Future<void> updateStatus(int? id, ProductionStatus newStatus) async {
     if (newStatus == ProductionStatus.MOVED_TO_WAREHOUSE) {
@@ -76,7 +103,7 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
 
       if (apiResponse.success) {
         NotifyUtil.success(context, apiResponse.message);
-        loadProdProducts();
+        loadAllProdProducts();
       } else {
         NotifyUtil.error(context, apiResponse.message);
       }
@@ -99,12 +126,12 @@ class _ProductionProductListPageState extends State<ProductionProductListPage> {
     final result = await showDialog(
       context: context,
       builder: (context) => AddProductionProductDialog(
-        onSave: loadProdProducts,
+        onSave: loadAllProdProducts,
       ),
     );
 
     if (result == true) {
-      loadProdProducts();
+      loadAllProdProducts();
     }
   }
 

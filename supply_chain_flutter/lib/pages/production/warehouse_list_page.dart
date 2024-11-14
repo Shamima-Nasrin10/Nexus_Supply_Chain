@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supply_chain_flutter/dialog/add_warehouse_dialog.dart';
 import 'package:supply_chain_flutter/model/production/warehouse_model.dart';
+import 'package:supply_chain_flutter/pages/production/production_product_list_page.dart';
 import 'package:supply_chain_flutter/service/production/warehouse_service.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
 
@@ -67,7 +68,12 @@ class _WarehouseListPageState extends State<WarehouseListPage> {
   }
 
   void viewWarehouse(Warehouse warehouse) {
-    // Leave this empty for now
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ProductionProductListPage(warehouseId: warehouse.id!),
+      ),
+    );
   }
 
   void editWarehouse(Warehouse warehouse) async {
