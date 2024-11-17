@@ -9,6 +9,7 @@ import 'package:supply_chain_flutter/pages/raw_material/procurement_list_page.da
 import 'package:supply_chain_flutter/pages/raw_material/raw_mat_category_list.dart';
 import 'package:supply_chain_flutter/pages/raw_material/raw_mat_list_page.dart';
 import 'package:supply_chain_flutter/pages/raw_material/supplier_list_page.dart';
+import 'package:supply_chain_flutter/pages/welcome_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -21,11 +22,11 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Supply Chain Management',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        scaffoldBackgroundColor: Colors.white,
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => HomePage(),
+        '/': (context) => WelcomeScreen(),
         '/warehouseList': (context) => WarehouseListPage(),
         '/prodProductList': (context) => ProductionProductListPage(),
         '/productList': (context) => ProductListPage(),
