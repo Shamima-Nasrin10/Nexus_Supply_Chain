@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:supply_chain_flutter/model/raw_material/raw_material_model.dart';
 import 'package:supply_chain_flutter/service/raw_material/raw_material_service.dart';
+import 'package:supply_chain_flutter/util/URL.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
 
 import '../../dialog/add_raw_mat_dialog.dart';
@@ -82,57 +83,63 @@ class _RawMatListPageState extends State<RawMatListPage> {
         padding: const EdgeInsets.all(10.0),
         child: rawMaterials.isEmpty
             ? Center(child: CircularProgressIndicator())
-            : DataTable(
-          columns: const [
-            DataColumn(label: Text("SL")),
-            DataColumn(label: Text("Name")),
-            DataColumn(label: Text("Unit")),
-            DataColumn(label: Text("Category")),
-            DataColumn(label: Text("Stock")),
-            DataColumn(label: Text("Image")),
-            DataColumn(label: Text("Actions")),
-          ],
-          rows: rawMaterials.asMap().entries.map((entry) {
-            int index = entry.key;
-            RawMaterial rawMaterial = entry.value;
+            : SingleChildScrollView(
+          scrollDirection: Axis.horizontal, // Enables horizontal scrolling
+          child: SingleChildScrollView(
+            scrollDirection: Axis.vertical, // Enables vertical scrolling
+            child: DataTable(
+              columns: const [
+                DataColumn(label: Text("SL")),
+                DataColumn(label: Text("Name")),
+                DataColumn(label: Text("Unit")),
+                DataColumn(label: Text("Category")),
+                DataColumn(label: Text("Stock")),
+                DataColumn(label: Text("Image")),
+                DataColumn(label: Text("Actions")),
+              ],
+              rows: rawMaterials.asMap().entries.map((entry) {
+                int index = entry.key;
+                RawMaterial rawMaterial = entry.value;
 
-            return DataRow(
-              cells: [
-                DataCell(Text('${index + 1}')),
-                DataCell(Text(rawMaterial.name ?? '-')),
-                DataCell(Text(rawMaterial.unit?.toString().split('.').last ?? '-')),
-                DataCell(Text(rawMaterial.category?.name ?? '-')),
-                DataCell(Text('${rawMaterial.quantity ?? 0}')),
-                DataCell(rawMaterial.image != null
-                    ? Padding(
+                return DataRow(
+                  cells: [
+                    DataCell(Text('${index + 1}')),
+                    DataCell(Text(rawMaterial.name ?? '-')),
+                    DataCell(Text(rawMaterial.unit?.toString().split('.').last ?? '-')),
+                    DataCell(Text(rawMaterial.category?.name ?? '-')),
+                    DataCell(Text('${rawMaterial.quantity ?? 0}')),
+                    DataCell(rawMaterial.image != null
+                        ? Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Image.network(
-                                        'http://localhost:8080/images/rawmaterial/${rawMaterial.image}',
-                                        height: 50,
-                                        width: 50,
-                                        fit: BoxFit.cover,
-                                      ),
+                        '${ApiURL.baseURL}/images/rawmaterial/${rawMaterial.image}',
+                        height: 50,
+                        width: 50,
+                        fit: BoxFit.cover,
+                      ),
                     )
-                    : Text('No Image')),
-                DataCell(
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(Icons.edit, color: Colors.blue),
-                        onPressed: () {
-                          // Handle edit
-                        },
+                        : Text('No Image')),
+                    DataCell(
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.edit, color: Colors.blue),
+                            onPressed: () {
+                              // Handle edit
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.delete, color: Colors.red),
+                            onPressed: () => deleteRawMaterial(rawMaterial.id!),
+                          ),
+                        ],
                       ),
-                      IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () => deleteRawMaterial(rawMaterial.id!),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          }).toList(),
+                    ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(

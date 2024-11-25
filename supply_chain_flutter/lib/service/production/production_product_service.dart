@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:supply_chain_flutter/model/production/production_product_model.dart';
 import '../../util/apiresponse.dart';
+import '../../util/URL.dart';
 
 
 class ProdProductService {
-  final String apiUrl = 'http://localhost:8080/api/productionProduct';
+  final String apiUrl = '${ApiURL.baseURL}/api/productionProduct';
 
   Future<ApiResponse> getAllProductionProducts() async {
     try {

@@ -29,7 +29,7 @@ class WelcomeScreen extends StatelessWidget {
                   ),
                   child: Center(
                     child: Image.asset(
-                      "welcome_screen.png",
+                      "assets/welcome_screen.png",
                       scale: 0.8,
                     ),
                   ),

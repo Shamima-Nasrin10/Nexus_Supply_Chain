@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import 'package:supply_chain_flutter/model/production/product_model.dart';
 import '../../util/apiresponse.dart';
+import '../../util/URL.dart';
 
 class ProductService {
-  final String apiUrl = 'http://localhost:8080/api/product';
+  final String apiUrl = '${ApiURL.baseURL}/api/product';
 
 
   Future<ApiResponse> getAllProducts() async {

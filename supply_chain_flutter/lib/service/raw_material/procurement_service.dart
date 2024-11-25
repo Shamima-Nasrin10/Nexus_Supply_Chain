@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../../model/raw_material/procurement_model.dart';
 import '../../util/apiresponse.dart';
+import '../../util/URL.dart';
 
 class ProcurementService {
-  final String apiUrl = 'http://localhost:8080/api/procurement';
+  final String apiUrl = '${ApiURL.baseURL}/api/procurement';
 
   Future<ApiResponse> getAllProcurements() async {
     try {

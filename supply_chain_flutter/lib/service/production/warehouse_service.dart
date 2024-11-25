@@ -2,9 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:supply_chain_flutter/model/production/warehouse_model.dart';
 import 'package:supply_chain_flutter/util/apiresponse.dart';
+import '../../util/URL.dart';
 
 class WarehouseService {
-  final String apiUrl = 'http://localhost:8080/api/warehouse';
+  final String apiUrl = '${ApiURL.baseURL}/api/warehouse';
 
   // Fetch all warehouses
   Future<ApiResponse> getAllWarehouses() async {

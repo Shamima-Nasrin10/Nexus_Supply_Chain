@@ -6,9 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
-import 'package:image_picker_web/image_picker_web.dart';
 import 'package:supply_chain_flutter/model/production/product_model.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
+
+import '../../util/util.dart';
 
 
 class ProductCreatePage extends StatefulWidget {
@@ -33,17 +34,17 @@ class _ProductCreatePageState extends State<ProductCreatePage> {
 
   Future<void> pickImage() async {
     if (kIsWeb) {
-      // For Web: Use image_picker_web to pick image and store as bytes
-      var pickedImage = await ImagePickerWeb.getImageAsBytes();
+      // For Web
+      final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
+        var uintImage = await Util.convertXFileToUint8List(pickedImage);
         setState(() {
-          webImage = pickedImage; // Store the picked image as Uint8List
+          webImage = uintImage; // Store the picked image as Uint8List
         });
       }
     } else {
-      // For Mobile: Use image_picker to pick image
-      final XFile? pickedImage =
-      await _picker.pickImage(source: ImageSource.gallery);
+      // For Mobile/Desktop
+      final XFile? pickedImage = await _picker.pickImage(source: ImageSource.gallery);
       if (pickedImage != null) {
         setState(() {
           selectedImage = pickedImage;

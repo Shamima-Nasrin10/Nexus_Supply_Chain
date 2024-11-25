@@ -4,9 +4,10 @@ import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
 import '../../model/raw_material/raw_material_model.dart';
 import '../../util/apiresponse.dart';
+import '../../util/URL.dart';
 
 class RawMaterialService {
-  final String apiUrl = 'http://localhost:8080/api/rawmaterial';
+  final String apiUrl = '${ApiURL.baseURL}/api/rawmaterial';
 
   // Method to get all raw materials
   Future<ApiResponse> getRawMaterials() async {

@@ -4,6 +4,7 @@ import 'package:supply_chain_flutter/service/production/product_service.dart';
 import 'package:supply_chain_flutter/util/notify_util.dart';
 
 import '../../dialog/add_product_dialog.dart';
+import '../../util/URL.dart';
 
 class ProductListPage extends StatefulWidget {
   const ProductListPage({Key? key}) : super(key: key);
@@ -124,7 +125,7 @@ class _ProductListPageState extends State<ProductListPage> {
                             borderRadius: BorderRadius.circular(8),
                             child: product.image != null
                                 ? Image.network(
-                                    'http://localhost:8080/images/products/${product.image}',
+                                    '${ApiURL.baseURL}/images/products/${product.image}',
                                     height: 80,
                                     width: 80,
                                     fit: BoxFit.cover,

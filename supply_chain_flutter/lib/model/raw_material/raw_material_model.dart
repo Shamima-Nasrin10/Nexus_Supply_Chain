@@ -18,7 +18,6 @@ class RawMaterial {
     this.quantity
   });
 
-  // Method to convert from JSON to RawMaterial
   factory RawMaterial.fromJson(Map<String, dynamic> json) {
     return RawMaterial(
       id: json['id'] as int?,
@@ -32,7 +31,7 @@ class RawMaterial {
     );
   }
 
-  // Method to convert RawMaterial to JSON
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -45,7 +44,6 @@ class RawMaterial {
   }
 }
 
-// Enum for Unit types
 enum Unit {
   LITRE,
   PIECE,

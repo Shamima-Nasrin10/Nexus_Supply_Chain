@@ -3,8 +3,10 @@ import 'package:http/http.dart' as http;
 import 'package:supply_chain_flutter/model/raw_material/supplier_model.dart';
 import 'package:supply_chain_flutter/util/apiresponse.dart';
 
+import '../../util/URL.dart';
+
 class SupplierService {
-  final String apiUrl = 'http://localhost:8080/api/supplier';
+  final String apiUrl = '${ApiURL.baseURL}/api/supplier';
 
   Future<ApiResponse> getAllSuppliers() async {
     final response = await http.get(Uri.parse('$apiUrl/list'));

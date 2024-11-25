@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:supply_chain_flutter/model/raw_material/raw_mat_category_model.dart';
 import 'package:supply_chain_flutter/util/apiresponse.dart';
+import '../../util/URL.dart';
 
 
 class RawMaterialCategoryService {
-  final String apiUrl = 'http://localhost:8080/api/rawmaterialcategory';
+  final String apiUrl = '${ApiURL.baseURL}/api/rawmaterialcategory';
 
   // Get all raw material categories
   Future<ApiResponse> getAllRawMaterialCategories() async {
