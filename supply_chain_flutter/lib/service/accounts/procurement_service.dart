@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../../model/raw_material/procurement_model.dart';
+import '../../model/accounts/procurement_model.dart';
 import '../../util/apiresponse.dart';
 import '../../util/URL.dart';
 

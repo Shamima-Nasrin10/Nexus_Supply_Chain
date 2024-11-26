@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:supply_chain_flutter/model/raw_material/procurement_model.dart';
+import 'package:supply_chain_flutter/model/accounts/procurement_model.dart';
 import 'package:supply_chain_flutter/model/raw_material/raw_material_model.dart';
-import 'package:supply_chain_flutter/model/raw_material/supplier_model.dart';
+import 'package:supply_chain_flutter/model/stakeholders/supplier_model.dart';
 import 'package:supply_chain_flutter/util/apiresponse.dart';
-import '../../service/raw_material/procurement_service.dart';
+import '../../service/accounts/procurement_service.dart';
 import '../../service/raw_material/raw_material_service.dart';
-import '../../service/raw_material/supplier_service.dart';
+import '../../service/stakeholders/supplier_service.dart';
 
 class ProcurementCreatePage extends StatefulWidget {
   Procurement? procurement;

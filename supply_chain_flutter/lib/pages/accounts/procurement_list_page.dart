@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:supply_chain_flutter/model/raw_material/procurement_model.dart';
-import 'package:supply_chain_flutter/pages/raw_material/procurement_create_page.dart';
+import 'package:supply_chain_flutter/model/accounts/procurement_model.dart';
+import 'package:supply_chain_flutter/pages/accounts/procurement_create_page.dart';
 import 'package:supply_chain_flutter/util/apiresponse.dart';
-import '../../service/raw_material/procurement_service.dart';
+import '../../service/accounts/procurement_service.dart';
 
 class ProcurementListPage extends StatefulWidget {
   @override

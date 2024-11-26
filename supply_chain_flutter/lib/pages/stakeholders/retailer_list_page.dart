@@ -1,51 +1,51 @@
+
 import 'package:flutter/material.dart';
-import 'package:supply_chain_flutter/model/raw_material/raw_mat_category_model.dart';
-import 'package:supply_chain_flutter/model/raw_material/supplier_model.dart';
-import 'package:supply_chain_flutter/service/raw_material/raw_mat_category_service.dart';
-import 'package:supply_chain_flutter/service/raw_material/supplier_service.dart';
-import 'package:supply_chain_flutter/util/apiresponse.dart';
+import 'package:supply_chain_flutter/model/stakeholders/retailer_model.dart';
+import 'package:supply_chain_flutter/service/stakeholders/retailer_service.dart';
+
+import '../../util/apiresponse.dart';
 import '../../util/notify_util.dart';
 
-class SupplierListPage extends StatefulWidget {
+class RetailerListPage extends StatefulWidget {
   @override
-  _SupplierListPageState createState() => _SupplierListPageState();
+  _RetailerListPageState createState() => _RetailerListPageState();
 }
 
-class _SupplierListPageState extends State<SupplierListPage> {
-  final SupplierService _service = SupplierService();
-  List<Supplier> _suppliers = [];
+class _RetailerListPageState extends State<RetailerListPage> {
+  final RetailerService _service = RetailerService();
+  List<Retailer> _retailers = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchSuppliers();
+    _fetchRetailers();
   }
 
-  Future<void> _fetchSuppliers() async {
-    ApiResponse response = await _service.getAllSuppliers();
+  Future<void> _fetchRetailers() async {
+    ApiResponse response = await _service.getAllRetailers();
     if (response.success) {
       setState(() {
-        _suppliers = (response.data?['rawMaterialSuppliers'] as List)
-            .map((json) => Supplier.fromJson(json))
+        _retailers = (response.data?['productRetailers'] as List)
+            .map((json) => Retailer.fromJson(json))
             .toList();
       });
     } else {
-      NotifyUtil.error(context, response.message ?? 'Failed to load suppliers');
+      NotifyUtil.error(context, response.message ?? 'Failed to load retailers');
     }
   }
 
   Future<void> _deleteSupplier(int id) async {
-    ApiResponse response = await _service.deleteSupplierById(id);
+    ApiResponse response = await _service.deleteRetailerById(id);
     if (response.success) {
       NotifyUtil.success(context, response.message);
-      _fetchSuppliers();
+      _fetchRetailers();
     } else {
       NotifyUtil.error(
-          context, response.message ?? 'Failed to delete supplier');
+          context, response.message ?? 'Failed to delete retailer');
     }
   }
 
-  void _showCreateSupplierDialog() {
+  void _showCreateRetailerDialog() {
     final _companyNameController = TextEditingController();
     final _contactPersonController = TextEditingController();
     final _emailController = TextEditingController();
@@ -55,7 +55,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
       context: context,
       builder: (context) {
         return AlertDialog(
-          title: Text('Create Supplier'),
+          title: Text('Create Retailer'),
           content: SingleChildScrollView(
             child: Column(
               children: [
@@ -94,7 +94,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
               onPressed: () async {
                 final companyName = _companyNameController.text.trim();
                 if (companyName.isNotEmpty) {
-                  Supplier newSupplier = Supplier(
+                  Retailer newRetailer = Retailer(
                     companyName: companyName,
                     contactPerson: _contactPersonController.text.trim(),
                     email: _emailController.text.trim(),
@@ -102,13 +102,13 @@ class _SupplierListPageState extends State<SupplierListPage> {
                     address: _addressController.text.trim(),
                   );
 
-                  ApiResponse response = await _service.saveSupplier(newSupplier);
+                  ApiResponse response = await _service.saveRetailer(newRetailer);
                   if (response.success) {
-                    NotifyUtil.success(context, response.message ?? 'Supplier saved successfully');
+                    NotifyUtil.success(context, response.message ?? 'Retailer saved successfully');
                     Navigator.of(context).pop();
-                    _fetchSuppliers();
+                    _fetchRetailers();
                   } else {
-                    NotifyUtil.error(context, response.message ?? 'Failed to save supplier');
+                    NotifyUtil.error(context, response.message ?? 'Failed to save retailer');
                   }
                 } else {
                   NotifyUtil.error(context, 'Company name cannot be empty');
@@ -127,7 +127,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'List of Suppliers',
+          'List of Retailers',
           style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -146,18 +146,18 @@ class _SupplierListPageState extends State<SupplierListPage> {
             end: Alignment.bottomCenter,
           ),
         ),
-        child: _suppliers.isEmpty
+        child: _retailers.isEmpty
             ? Center(
           child: Text(
-            'No suppliers available',
+            'No Retailers available',
             style: TextStyle(fontSize: 18, color: Colors.grey),
           ),
         )
             : ListView.builder(
           padding: const EdgeInsets.all(10),
-          itemCount: _suppliers.length,
+          itemCount: _retailers.length,
           itemBuilder: (context, index) {
-            final supplier = _suppliers[index];
+            final supplier = _retailers[index];
             return Card(
               elevation: 6,
               margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
@@ -173,7 +173,7 @@ class _SupplierListPageState extends State<SupplierListPage> {
                   child: Icon(Icons.business, color: Colors.white, size: 28),
                 ),
                 title: Text(
-                  supplier.companyName ?? 'Unnamed Supplier',
+                  supplier.companyName ?? 'Unnamed Retailer',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.w600,
@@ -270,9 +270,9 @@ class _SupplierListPageState extends State<SupplierListPage> {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: _showCreateSupplierDialog,
+        onPressed: _showCreateRetailerDialog,
         label: Text(
-          'Add Supplier',
+          'Add Retailer',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         icon: Icon(Icons.add),

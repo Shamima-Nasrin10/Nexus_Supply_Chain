@@ -130,6 +130,24 @@ class _HomePageState extends State<HomePage> {
                 colors: [Colors.deepPurple, Colors.cyan],
               ),
             ),
+            _buildDashboardCard(
+              context,
+              icon: Icons.people,
+              label: 'Retailers',
+              routeName: '/retailerList',
+              gradient: LinearGradient(
+                colors: [Colors.black45, Colors.blueGrey],
+              ),
+            ),
+            _buildDashboardCard(
+              context,
+              icon: Icons.shopping_bag,
+              label: 'Sales',
+              routeName: '/salesList',
+              gradient: LinearGradient(
+                colors: [Colors.brown, Colors.blueGrey],
+              ),
+            ),
           ],
         ),
       ),

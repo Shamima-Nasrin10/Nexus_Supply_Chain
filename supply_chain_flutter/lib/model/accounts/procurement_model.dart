@@ -1,5 +1,5 @@
 import 'package:supply_chain_flutter/model/raw_material/raw_material_model.dart';
-import 'package:supply_chain_flutter/model/raw_material/supplier_model.dart';
+import 'package:supply_chain_flutter/model/stakeholders/supplier_model.dart';
 
 class Procurement {
   int? id;

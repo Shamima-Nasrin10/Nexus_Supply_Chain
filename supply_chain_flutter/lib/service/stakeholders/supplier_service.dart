@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:supply_chain_flutter/model/raw_material/supplier_model.dart';
+import 'package:supply_chain_flutter/model/stakeholders/supplier_model.dart';
 import 'package:supply_chain_flutter/util/apiresponse.dart';
 
 import '../../util/URL.dart';
@@ -38,7 +38,6 @@ class SupplierService {
     }
   }
 
-  // Update an existing raw material category
   Future<ApiResponse> updateSupplier(Supplier supplier) async {
     final response = await http.put(
       Uri.parse('$apiUrl/update'),
@@ -69,7 +68,6 @@ class SupplierService {
     }
   }
 
-  // Find a raw material category by ID
   Future<ApiResponse> findSupplierById(int id) async {
     final response = await http.get(Uri.parse('$apiUrl/$id'));
 
