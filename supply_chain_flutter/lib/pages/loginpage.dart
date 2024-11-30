@@ -5,17 +5,18 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:supply_chain_flutter/pages/homepage.dart';
 import 'package:supply_chain_flutter/pages/registrationpage.dart';
+import 'package:supply_chain_flutter/pages/welcome_screen.dart';
 
 class Login extends StatelessWidget {
-  final TextEditingController email = TextEditingController()..text = "test@gmail.com";
-  final TextEditingController password = TextEditingController()..text = "test1234";
+  final TextEditingController email = TextEditingController()..text;
+  final TextEditingController password = TextEditingController()..text;
 
   final storage=new FlutterSecureStorage();
 
   Future<void> loginUser(BuildContext context) async {
-    final url = Uri.parse('http://localhost:8080/api/login');
+    final apiUrl = Uri.parse('http://localhost:8080/api/login');
     final response = await http.post(
-      url,
+      apiUrl,
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'email': email.text, 'password': password.text}),
     );
@@ -38,7 +39,7 @@ class Login extends StatelessWidget {
 
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => HomePage()),
+        MaterialPageRoute(builder: (context) => WelcomeScreen()),
       );
 
     } else {
