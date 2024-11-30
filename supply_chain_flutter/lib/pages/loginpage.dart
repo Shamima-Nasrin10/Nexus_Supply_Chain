@@ -26,12 +26,10 @@ class Login extends StatelessWidget {
       final responseData = jsonDecode(response.body);
       final token = responseData['token'];
 
-      // Decode JWT to get 'sub' and 'role'
       Map<String, dynamic> payload = Jwt.parseJwt(token);
       String sub = payload['sub'];
       String role = payload['role'];
 
-      // Store token, sub, and role securely
       await storage.write(key: 'token', value: token);
       await storage.write(key: 'sub', value: sub);
       await storage.write(key: 'role', value: role);

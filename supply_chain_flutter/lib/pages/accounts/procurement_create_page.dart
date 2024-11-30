@@ -125,7 +125,6 @@ class _ProcurementCreatePageState extends State<ProcurementCreatePage> {
                 : "Procurement saved successfully")),
       );
 
-      // Return success indicator to the list page
       Navigator.of(context).pop(true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(

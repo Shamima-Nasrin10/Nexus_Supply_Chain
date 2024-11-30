@@ -101,4 +101,17 @@ class ProdProductService {
       );
     }
   }
+
+  Future<ApiResponse> getAllMovedToWarehouseProducts() async {
+    try {
+      final response = await http.get(Uri.parse('$apiUrl/moved-to-warehouse'));
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return ApiResponse.fromJson(jsonDecode(response.body));
+      } else {
+        return ApiResponse(success: false, message: 'Failed to load products moved to warehouse');
+      }
+    } catch (e) {
+      return ApiResponse(success: false, message: e.toString());
+    }
+  }
 }

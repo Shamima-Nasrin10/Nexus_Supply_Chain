@@ -12,7 +12,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       _selectedIndex = index;
     });
-    // Implement navigation logic if needed
   }
 
   @override
@@ -25,7 +24,7 @@ class _HomePageState extends State<HomePage> {
         leading: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Image.asset(
-            'assets/logo.png', // Add your logo path here
+            'assets/logo.png',
             fit: BoxFit.contain,
           ),
         ),

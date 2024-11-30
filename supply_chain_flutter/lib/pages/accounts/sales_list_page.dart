@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:supply_chain_flutter/model/accounts/sales_model.dart';
 import 'package:supply_chain_flutter/service/accounts/sales_service.dart';
 import 'package:supply_chain_flutter/util/apiresponse.dart';
+import 'package:supply_chain_flutter/util/notify_util.dart';
 import '../../dialog/add_sales_dialog.dart';
 
 class SalesListPage extends StatefulWidget {
@@ -39,9 +40,7 @@ class _SalesListPageState extends State<SalesListPage> {
       setState(() {
         _isLoading = false;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to load sales')),
-      );
+      NotifyUtil.error(context,'Failed to load sales');
     }
   }
 
@@ -56,11 +55,10 @@ class _SalesListPageState extends State<SalesListPage> {
     if (newSale != null) {
       ApiResponse response = await _salesService.saveSale(newSale);
       if (response.success) {
-        _fetchSales(); // Refresh the list
+        _fetchSales();
+        NotifyUtil.success(context, "Sale is created");
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create sale')),
-        );
+       NotifyUtil.error(context, "Failed to create sale");
       }
     }
   }
@@ -77,27 +75,21 @@ class _SalesListPageState extends State<SalesListPage> {
       ApiResponse response = await _salesService.saveSale(updatedSale);
       if (response.success) {
         _fetchSales();
+        NotifyUtil.success(context, "Sale is updated");
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to update sale')),
-        );
+        NotifyUtil.error(context,'Failed to update sale');
       }
     }
   }
 
-  // Function to handle Delete Sale
   void _deleteSale(Sales sale) async {
     ApiResponse response = await _salesService.deleteSaleById(sale.id!);
 
     if (response.success) {
-      _fetchSales(); // Refresh the list after deletion
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Sale deleted successfully')),
-      );
+      _fetchSales();
+      NotifyUtil.success(context, "Sale is deleted successfully");
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to delete sale')),
-      );
+     NotifyUtil.error(context,'Failed to delete sale');
     }
   }
 
@@ -214,7 +206,7 @@ class _SalesListPageState extends State<SalesListPage> {
       children: [
         TextButton(
           child: Text('Edit', style: TextStyle(color: Colors.blueAccent)),
-          onPressed: () => _navigateToEditSale(sales), // Edit functionality
+          onPressed: () => _navigateToEditSale(sales),
         ),
         const SizedBox(width: 8),
         TextButton(
