@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:supply_chain_flutter/dashboard/dashboard_page.dart';
 import 'package:supply_chain_flutter/pages/accounts/sales_create_page.dart';
 import 'package:supply_chain_flutter/pages/accounts/sales_list_page.dart';
 import 'package:supply_chain_flutter/pages/homepage.dart';
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         '/rawMatList': (context) => RawMatListPage(),
         '/supplierList': (context) => SupplierListPage(),
         '/login': (context) => Login(),
+        '/dashboard': (context) => DashboardPage(),
       },
     );
   }

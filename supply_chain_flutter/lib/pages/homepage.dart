@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../dashboard/dashboard_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -59,97 +60,10 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: GridView.count(
-          crossAxisCount: 3,  // 3 items per row
-          crossAxisSpacing: 6,
-          mainAxisSpacing: 6,
-          children: [
-            _buildDashboardCard(
-              context,
-              icon: Icons.shopping_cart,
-              label: 'Procurement',
-              routeName: '/procurementList',
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.shade200],
-              ),
-            ),
-            _buildDashboardCard(
-              context,
-              icon: Icons.category,
-              label: 'Raw Materials Category',
-              routeName: '/rawMatCategoryList',
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.shade100],
-              ),
-            ),
-            _buildDashboardCard(
-              context,
-              icon: Icons.list,
-              label: 'Raw Materials List',
-              routeName: '/rawMatList',
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.shade200],
-              ),
-            ),
-            _buildDashboardCard(
-              context,
-              icon: Icons.people,
-              label: 'Suppliers',
-              routeName: '/supplierList',
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.shade300],
-              ),
-            ),
-            _buildDashboardCard(
-              context,
-              icon: Icons.production_quantity_limits_rounded,
-              label: 'Product',
-              routeName: '/productList',
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.shade200],
-              ),
-            ),
-            _buildDashboardCard(
-              context,
-              icon: Icons.business,
-              label: 'Production',
-              routeName: '/prodProductList',
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.shade100],
-              ),
-            ),
-            _buildDashboardCard(
-              context,
-              icon: Icons.warehouse,
-              label: 'Warehouse',
-              routeName: '/warehouseList',
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.shade300],
-              ),
-            ),
-            _buildDashboardCard(
-              context,
-              icon: Icons.people,
-              label: 'Retailers',
-              routeName: '/retailerList',
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.shade100],
-              ),
-            ),
-            _buildDashboardCard(
-              context,
-              icon: Icons.shopping_bag,
-              label: 'Sales',
-              routeName: '/salesList',
-              gradient: LinearGradient(
-                colors: [Colors.white, Colors.grey.shade200],
-              ),
-            ),
-          ],
-        ),
-      ),
+      body: _selectedIndex == 0
+          ? DashboardPage()  // Show DashboardPage for Home
+          : _buildBusinessGrid(),  // Show Grid for Business
+
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -172,6 +86,102 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  // Business Grid
+  Widget _buildBusinessGrid() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GridView.count(
+        crossAxisCount: 3,  // 3 items per row
+        crossAxisSpacing: 6,
+        mainAxisSpacing: 6,
+        children: [
+          _buildDashboardCard(
+            context,
+            icon: Icons.shopping_cart,
+            label: 'Procurement',
+            routeName: '/procurementList',
+            gradient: LinearGradient(
+              colors: [Colors.white, Colors.grey.shade200],
+            ),
+          ),
+          _buildDashboardCard(
+            context,
+            icon: Icons.category,
+            label: 'Raw Materials Category',
+            routeName: '/rawMatCategoryList',
+            gradient: LinearGradient(
+              colors: [Colors.white, Colors.grey.shade100],
+            ),
+          ),
+          _buildDashboardCard(
+            context,
+            icon: Icons.list,
+            label: 'Raw Materials List',
+            routeName: '/rawMatList',
+            gradient: LinearGradient(
+              colors: [Colors.white, Colors.grey.shade200],
+            ),
+          ),
+          _buildDashboardCard(
+            context,
+            icon: Icons.people,
+            label: 'Suppliers',
+            routeName: '/supplierList',
+            gradient: LinearGradient(
+              colors: [Colors.white, Colors.grey.shade300],
+            ),
+          ),
+          _buildDashboardCard(
+            context,
+            icon: Icons.production_quantity_limits_rounded,
+            label: 'Product',
+            routeName: '/productList',
+            gradient: LinearGradient(
+              colors: [Colors.white, Colors.grey.shade200],
+            ),
+          ),
+          _buildDashboardCard(
+            context,
+            icon: Icons.business,
+            label: 'Production',
+            routeName: '/prodProductList',
+            gradient: LinearGradient(
+              colors: [Colors.white, Colors.grey.shade100],
+            ),
+          ),
+          _buildDashboardCard(
+            context,
+            icon: Icons.warehouse,
+            label: 'Warehouse',
+            routeName: '/warehouseList',
+            gradient: LinearGradient(
+              colors: [Colors.white, Colors.grey.shade300],
+            ),
+          ),
+          _buildDashboardCard(
+            context,
+            icon: Icons.people,
+            label: 'Retailers',
+            routeName: '/retailerList',
+            gradient: LinearGradient(
+              colors: [Colors.white, Colors.grey.shade100],
+            ),
+          ),
+          _buildDashboardCard(
+            context,
+            icon: Icons.shopping_bag,
+            label: 'Sales',
+            routeName: '/salesList',
+            gradient: LinearGradient(
+              colors: [Colors.white, Colors.grey.shade200],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Dashboard Card Builder
   Widget _buildDashboardCard(
       BuildContext context, {
         required IconData icon,
@@ -189,27 +199,27 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(
             gradient: gradient,
-            shape: BoxShape.circle,  // Round shape
+            shape: BoxShape.rectangle,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),  // Lighter shadow for simplicity
+                color: Colors.black.withOpacity(0.1),
                 offset: Offset(0, 5),
                 blurRadius: 8,
               ),
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(10.0),  // Smaller padding
+            padding: const EdgeInsets.all(10.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, size: 30, color: Colors.black),  // Smaller icon
+                Icon(icon, size: 30, color: Colors.black),
                 const SizedBox(height: 4),
                 Text(
                   label,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20,  // Larger font size
+                    fontSize: 20, 
                     fontWeight: FontWeight.bold,
                     color: Colors.redAccent,  // Bright text color
                   ),

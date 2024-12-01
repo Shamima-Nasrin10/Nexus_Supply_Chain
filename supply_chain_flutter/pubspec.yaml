@@ -45,6 +45,7 @@ dependencies:
   path: ^1.9.0
   mime: ^2.0.0
   html: ^0.15.5
+  fl_chart: ^0.69.2
 
 
 dev_dependencies:
