@@ -60,11 +60,11 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(8.0),
         child: GridView.count(
-          crossAxisCount: 2,
-          crossAxisSpacing: 16,
-          mainAxisSpacing: 16,
+          crossAxisCount: 3,  // 3 items per row
+          crossAxisSpacing: 6,
+          mainAxisSpacing: 6,
           children: [
             _buildDashboardCard(
               context,
@@ -72,7 +72,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Procurement',
               routeName: '/procurementList',
               gradient: LinearGradient(
-                colors: [Colors.blueAccent, Colors.indigo],
+                colors: [Colors.white, Colors.grey.shade200],
               ),
             ),
             _buildDashboardCard(
@@ -81,7 +81,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Raw Materials Category',
               routeName: '/rawMatCategoryList',
               gradient: LinearGradient(
-                colors: [Colors.blueGrey, Colors.deepPurpleAccent],
+                colors: [Colors.white, Colors.grey.shade100],
               ),
             ),
             _buildDashboardCard(
@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Raw Materials List',
               routeName: '/rawMatList',
               gradient: LinearGradient(
-                colors: [Colors.blueGrey, Colors.indigo],
+                colors: [Colors.white, Colors.grey.shade200],
               ),
             ),
             _buildDashboardCard(
@@ -99,7 +99,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Suppliers',
               routeName: '/supplierList',
               gradient: LinearGradient(
-                colors: [Colors.teal, Colors.indigo],
+                colors: [Colors.white, Colors.grey.shade300],
               ),
             ),
             _buildDashboardCard(
@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Product',
               routeName: '/productList',
               gradient: LinearGradient(
-                colors: [Colors.blueAccent, Colors.teal],
+                colors: [Colors.white, Colors.grey.shade200],
               ),
             ),
             _buildDashboardCard(
@@ -117,7 +117,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Production',
               routeName: '/prodProductList',
               gradient: LinearGradient(
-                colors: [Colors.blueGrey, Colors.cyan],
+                colors: [Colors.white, Colors.grey.shade100],
               ),
             ),
             _buildDashboardCard(
@@ -126,7 +126,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Warehouse',
               routeName: '/warehouseList',
               gradient: LinearGradient(
-                colors: [Colors.deepPurple, Colors.cyan],
+                colors: [Colors.white, Colors.grey.shade300],
               ),
             ),
             _buildDashboardCard(
@@ -135,7 +135,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Retailers',
               routeName: '/retailerList',
               gradient: LinearGradient(
-                colors: [Colors.black45, Colors.blueGrey],
+                colors: [Colors.white, Colors.grey.shade100],
               ),
             ),
             _buildDashboardCard(
@@ -144,7 +144,7 @@ class _HomePageState extends State<HomePage> {
               label: 'Sales',
               routeName: '/salesList',
               gradient: LinearGradient(
-                colors: [Colors.brown, Colors.blueGrey],
+                colors: [Colors.white, Colors.grey.shade200],
               ),
             ),
           ],
@@ -189,29 +189,29 @@ class _HomePageState extends State<HomePage> {
         child: Container(
           decoration: BoxDecoration(
             gradient: gradient,
-            borderRadius: BorderRadius.circular(10),
+            shape: BoxShape.circle,  // Round shape
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withOpacity(0.1),  // Lighter shadow for simplicity
                 offset: Offset(0, 5),
-                blurRadius: 10,
+                blurRadius: 8,
               ),
             ],
           ),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: const EdgeInsets.all(10.0),  // Smaller padding
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(icon, size: 40, color: Colors.white),
-                const SizedBox(height: 10),
+                Icon(icon, size: 30, color: Colors.black),  // Smaller icon
+                const SizedBox(height: 4),
                 Text(
                   label,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    color: Colors.white,
+                    fontSize: 20,  // Larger font size
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent,  // Bright text color
                   ),
                 ),
               ],

@@ -8,10 +8,9 @@ import 'package:supply_chain_flutter/pages/registrationpage.dart';
 import 'package:supply_chain_flutter/pages/welcome_screen.dart';
 
 class Login extends StatelessWidget {
-  final TextEditingController email = TextEditingController()..text;
-  final TextEditingController password = TextEditingController()..text;
-
-  final storage=new FlutterSecureStorage();
+  final TextEditingController email = TextEditingController()..text='test@gmail.com';
+  final TextEditingController password = TextEditingController()..text='test1234';
+  final storage = FlutterSecureStorage();
 
   Future<void> loginUser(BuildContext context) async {
     final apiUrl = Uri.parse('http://localhost:8080/api/login');
@@ -41,7 +40,6 @@ class Login extends StatelessWidget {
         context,
         MaterialPageRoute(builder: (context) => WelcomeScreen()),
       );
-
     } else {
       print('Login failed with status: ${response.statusCode}');
     }
@@ -50,76 +48,137 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.all(16),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Colors.black12, Colors.teal],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: Center(
+          child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Center(
-                  child: Text(
-                    'Login',
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.redAccent),
-                  ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.2,  // White space above
                 ),
-                SizedBox(
-                  height: 10,
-                ),              TextField(
-                  controller: email,
-                  decoration: InputDecoration(
-                      labelText: 'Email',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.email)),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                TextField(
-                  controller: password,
-                  decoration: InputDecoration(
-                      labelText: 'Password',
-                      border: OutlineInputBorder(),
-                      prefixIcon: Icon(Icons.lock)),
-                  obscureText: true,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                ElevatedButton(
-                  onPressed: (){
-                    String em=email.text;
-                    String pass=password.text;
-                    print('Email:$em, Password:$pass');
-                    loginUser(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Colors.white,
-                    backgroundColor: Colors.redAccent, // Text and icon color
-                  ),
-                  child: Text("Login", style: TextStyle(fontWeight: FontWeight.bold),),
-                ),
-                SizedBox(height: 20),
+                Padding(
+                  padding: EdgeInsets.all(32),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.1),  // Slightly transparent
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(200),  // Perfectly round upper-left corner
+                        topRight: Radius.circular(12),
+                        bottomLeft: Radius.circular(12),
+                        bottomRight: Radius.circular(12),
+                      ),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(32),
+                      child: Column(
+                        children: [
+                          Text(
+                            'Login',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 30),
 
-                // Login Text Button
-                TextButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => RegistrationPage()),
-                    );
-                  },
-                  child: Text(
-                    'Registration',
-                    style: TextStyle(
-                      color: Colors.redAccent,
-                      decoration: TextDecoration.none,
+                          // Email TextField
+                          TextField(
+                            controller: email,
+                            decoration: InputDecoration(
+                              labelText: 'Email',
+                              labelStyle: TextStyle(color: Colors.white),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: Colors.blueAccent),
+                              ),
+                              prefixIcon: Icon(Icons.email, color: Colors.white),
+                            ),
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          SizedBox(height: 20),
+
+                          // Password TextField
+                          TextField(
+                            controller: password,
+                            decoration: InputDecoration(
+                              labelText: 'Password',
+                              labelStyle: TextStyle(color: Colors.white),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12),
+                                borderSide: BorderSide(color: Colors.blueAccent),
+                              ),
+                              prefixIcon: Icon(Icons.lock, color: Colors.white),
+                            ),
+                            obscureText: true,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          SizedBox(height: 20),
+
+                          // Login Button
+                          ElevatedButton(
+                            onPressed: () {
+                              String em = email.text;
+                              String pass = password.text;
+                              print('Email: $em, Password: $pass');
+                              loginUser(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.white, // Button color
+                              padding: EdgeInsets.symmetric(vertical: 12, horizontal: 30),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                            ),
+                            child: Text(
+                              "Login",
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.blueGrey,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 20),
+
+                          // Registration Text Button
+                          TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => RegistrationPage()),
+                              );
+                            },
+                            child: Text(
+                              'Not a member? Register here',
+                              style: TextStyle(
+                                color: Colors.white,
+                                decoration: TextDecoration.underline,
+                                fontSize: 16,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
